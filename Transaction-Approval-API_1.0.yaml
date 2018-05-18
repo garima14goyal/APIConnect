@@ -1,0 +1,923 @@
+swagger: '2.0'
+info:
+  description: Swagger Specifications for Transaction Approval APIs
+  version: '1.0'
+  title: Transaction Approval API
+  contact:
+    name: ''
+  x-ibm-name: Transaction-Approval-API
+host: 'localhost:8080'
+basePath: /
+tags:
+  - name: TransactionApproval
+schemes:
+  - https
+paths:
+  /v1/transactions/approve:
+    patch:
+      tags:
+        - TransactionApproval
+      summary: Approve or reject transactions that are pending for approval
+      operationId: approveTransaction
+      schemes:
+        - http
+        - https
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: requestBody
+          required: true
+          schema:
+            $ref: '#/definitions/ApprovePendingTransactionsRequest'
+        - name: client_id
+          in: query
+          required: true
+          type: string
+        - name: client_secret
+          in: query
+          required: true
+          type: string
+        - name: Authorization
+          in: header
+          description: The bearer token obtained after performing a login
+          required: true
+          type: string
+        - name: consumerId
+          in: header
+          description: TPP id for example
+          required: true
+          type: string
+        - name: correlationId
+          in: header
+          description: Correlation ID passed by the requesting system
+          required: false
+          type: string
+        - name: journeyId
+          in: header
+          description: Global transaction Id
+          required: true
+          type: string
+        - name: lang
+          in: header
+          description: 2 character iso code for preferred language. If empty the default will be English
+          required: false
+          type: string
+        - name: originChannelId
+          in: header
+          description: ID of the channel from which the invocation occurred
+          required: false
+          type: string
+        - name: originDeptId
+          in: header
+          description: ID of the department from which the invocation occurred
+          required: false
+          type: string
+        - name: originEmployeeId
+          in: header
+          description: Employee ID of the requester (as per employee HR record)
+          required: false
+          type: string
+        - name: originSourceId
+          in: header
+          description: ID of the source system invoking
+          required: false
+          type: string
+        - name: originTerminalId
+          in: header
+          description: Terminal ID of the requester
+          required: false
+          type: string
+        - name: originUserId
+          in: header
+          description: User ID of the requester (as per LDAP)
+          required: true
+          type: string
+        - name: sessionId
+          in: header
+          description: use for loging each activity performed by user in a session
+          required: false
+          type: string
+        - name: timeStamp
+          in: header
+          description: The time stamp when the request was sent to system
+          required: true
+          type: string
+          format: date-time
+        - name: x-fapicustomer-ipaddress
+          in: header
+          description: The PSUs IP address if the PSU is currently logged in with the TPP.
+          required: false
+          type: string
+        - name: x-fapicustomer-lastlogged-time
+          in: header
+          description: The time when the PSU last logged in with the TPP.
+          required: false
+          type: string
+          format: date-time
+        - name: x-fapifinancial-id
+          in: header
+          description: The unique id of the ASPSP to which the request is issued. The unique id will be issued by OB
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          headers:
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+        '404':
+          description: API URL Not Found
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '405':
+          description: Method not Found
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '406':
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '428':
+          description: Precondition Required
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '429':
+          description: Too many Requests
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            retryAfter:
+              type: string
+              description: Header indicating the time (in seconds) that the TPP should wait before retrying an operation.
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '503':
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+  /v1/transactions/pendingForApproval:
+    get:
+      tags:
+        - TransactionApproval
+      summary: 'Get the list of transactions  pending for approval, based on user ID'
+      operationId: retrievePendingTransactions
+      schemes:
+        - http
+        - https
+      produces:
+        - application/json
+      parameters:
+        - name: qualityofCode
+          in: query
+          required: false
+          type: string
+          enum:
+            - CACHED
+            - REALTIME
+        - name: maxCount
+          in: query
+          required: false
+          type: string
+          default: '100'
+        - name: pageNumber
+          in: query
+          required: false
+          type: string
+          default: '1'
+        - name: client_id
+          in: query
+          required: true
+          type: string
+        - name: client_secret
+          in: query
+          required: true
+          type: string
+        - name: startDate
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: endDate
+          in: query
+          required: false
+          type: string
+          format: date-time
+        - name: accountId
+          in: query
+          required: false
+          type: string
+        - name: transactionType
+          in: query
+          required: false
+          type: string
+        - name: Authorization
+          in: header
+          description: The bearer token obtained after performing a login
+          required: true
+          type: string
+        - name: consumerId
+          in: header
+          description: TPP id for example
+          required: true
+          type: string
+        - name: correlationId
+          in: header
+          description: Correlation ID passed by the requesting system
+          required: false
+          type: string
+        - name: journeyId
+          in: header
+          description: Global transaction Id
+          required: true
+          type: string
+        - name: lang
+          in: header
+          description: 2 character iso code for preferred language. If empty the default will be English
+          required: false
+          type: string
+        - name: originChannelId
+          in: header
+          description: ID of the channel from which the invocation occurred
+          required: false
+          type: string
+        - name: originDeptId
+          in: header
+          description: ID of the department from which the invocation occurred
+          required: false
+          type: string
+        - name: originEmployeeId
+          in: header
+          description: Employee ID of the requester (as per employee HR record)
+          required: false
+          type: string
+        - name: originSourceId
+          in: header
+          description: ID of the source system invoking
+          required: false
+          type: string
+        - name: originTerminalId
+          in: header
+          description: Terminal ID of the requester
+          required: false
+          type: string
+        - name: originUserId
+          in: header
+          description: User ID of the requester (as per LDAP)
+          required: true
+          type: string
+        - name: sessionId
+          in: header
+          description: use for loging each activity performed by user in a session
+          required: false
+          type: string
+        - name: timeStamp
+          in: header
+          description: The time stamp when the request was sent to system
+          required: true
+          type: string
+          format: date-time
+        - name: x-fapicustomer-ipaddress
+          in: header
+          description: The PSUs IP address if the PSU is currently logged in with the TPP.
+          required: false
+          type: string
+        - name: x-fapicustomer-lastlogged-time
+          in: header
+          description: The time when the PSU last logged in with the TPP.
+          required: false
+          type: string
+          format: date-time
+        - name: x-fapifinancial-id
+          in: header
+          description: The unique id of the ASPSP to which the request is issued. The unique id will be issued by OB
+          required: false
+          type: string
+      responses:
+        '200':
+          description: OK
+          schema:
+            $ref: '#/definitions/TransactionsPendingForApprovalResponse'
+          headers:
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '400':
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '401':
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '403':
+          description: Forbidden
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+        '404':
+          description: API URL Not Found
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '405':
+          description: Method not Found
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '406':
+          description: Not Acceptable
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '428':
+          description: Precondition Required
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+        '429':
+          description: Too many Requests
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            retryAfter:
+              type: string
+              description: Header indicating the time (in seconds) that the TPP should wait before retrying an operation.
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+        '500':
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+        '503':
+          description: Service Unavailable
+          schema:
+            $ref: '#/definitions/pointerToErrorResponse'
+          headers:
+            journeyId:
+              type: string
+              description: Global Transaction id/Journey ID
+            timeStamp:
+              type: string
+              description: The time stamp when the message was received from the system
+            correlationId:
+              type: string
+              description: Correlation ID passed by the requesting system
+definitions:
+  AdditionalDetails:
+    type: object
+    properties:
+      errorCode:
+        type: string
+      severity:
+        type: string
+      status:
+        type: string
+      description:
+        type: string
+  Status:
+    type: object
+    required:
+      - code
+      - description
+    properties:
+      code:
+        type: string
+        enum:
+          - COMPLETED
+          - REJECTED
+          - PENDING_FOR_APPROVAL
+          - AUTHORIZED
+          - DECLINED
+          - PENDING
+          - FAILED
+          - SUBMITTED
+          - ACCEPTED
+          - SUBMITTED_PEND_EXEC
+          - WARN
+      description:
+        type: array
+        items:
+          type: string
+  ApprovePendingTransactionsRequest:
+    type: object
+    required:
+      - transactionsToBeApproved
+    properties:
+      transactionsToBeApproved:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionToBeApproved'
+      otpCode:
+        type: string
+        description: OTP for approval / rejection
+  Amount:
+    type: object
+    required:
+      - amount
+      - currencyCode
+    properties:
+      amount:
+        type: number
+      currencyCode:
+        type: string
+      currencyRate:
+        type: string
+  Metadata:
+    type: object
+    required:
+      - totalNumberOfRecords
+    properties:
+      totalNumberOfRecords:
+        type: number
+  Error:
+    type: object
+    properties:
+      code:
+        type: string
+      severity:
+        type: string
+        enum:
+          - error
+          - warning
+          - Info
+      description:
+        type: string
+      additionalDetails:
+        type: array
+        items:
+          $ref: '#/definitions/AdditionalDetails'
+  ErrorResponse:
+    type: object
+    properties:
+      fatalError:
+        type: boolean
+      error:
+        $ref: '#/definitions/Error'
+  Debtor:
+    type: object
+    required:
+      - accountId
+      - bankId
+    properties:
+      accountId:
+        type: string
+      accountName:
+        type: string
+      bankId:
+        type: string
+  ShortAddress:
+    type: object
+    properties:
+      line1:
+        type: string
+        maxLength: 35
+      line2:
+        type: string
+        maxLength: 35
+      line3:
+        type: string
+        maxLength: 35
+      line4:
+        type: string
+        maxLength: 35
+  TransactionToBeApproved:
+    type: object
+    required:
+      - actionCode
+      - transactionId
+    properties:
+      transactionId:
+        type: string
+      actionCode:
+        type: string
+        enum:
+          - APPROVE
+          - REJECT
+  TransactionApproval:
+    type: object
+    required:
+      - creditor
+      - debtor
+      - status
+      - transactionDates
+      - transactionId
+      - transactionTypeDescription
+    properties:
+      transactionId:
+        type: string
+      transactionTypeCode:
+        type: string
+      transactionTypeDescription:
+        type: string
+      transactionAmount:
+        $ref: '#/definitions/Amount'
+      description:
+        type: string
+        description: 'Mobile, internet banking, call center, etc..'
+      transactionDates:
+        type: array
+        items:
+          $ref: '#/definitions/DateType'
+      status:
+        $ref: '#/definitions/Status'
+      channelName:
+        type: string
+        description: 'Mobile, internet banking, call center, etc..'
+      canBeDeclinedFlag:
+        type: boolean
+      fileName:
+        type: string
+      externalTxnReferenceId:
+        type: string
+      debtor:
+        $ref: '#/definitions/Debtor'
+      creditor:
+        $ref: '#/definitions/Creditor'
+      totalCharges:
+        type: number
+      pendingSignatures:
+        type: string
+  DateType:
+    type: object
+    required:
+      - code
+      - value
+    properties:
+      code:
+        type: string
+        description: 'Possible values: requestDate, executionDate and valueDate etc'
+      value:
+        type: string
+        format: date-time
+  Creditor:
+    type: object
+    required:
+      - accountId
+    properties:
+      bankId:
+        type: string
+      accountId:
+        type: string
+      beneficiaryName:
+        type: string
+        maxLength: 35
+      beneficiaryCode:
+        type: string
+      beneficiaryAddress:
+        $ref: '#/definitions/ShortAddress'
+      bankName:
+        type: string
+      bankAddress:
+        type: string
+      bankCountryCode:
+        type: string
+      mobileNumber:
+        type: string
+      nationalId:
+        type: string
+      branchName:
+        type: string
+  pointerToErrorResponse:
+    type: object
+    properties:
+      errorResponse:
+        $ref: '#/definitions/ErrorResponse'
+  TransactionsPendingForApprovalResponse:
+    type: object
+    required:
+      - metadata
+      - transactionApprovals
+    properties:
+      transactionApprovals:
+        type: array
+        items:
+          $ref: '#/definitions/TransactionApproval'
+      metadata:
+        $ref: '#/definitions/Metadata'
+x-ibm-configuration:
+  assembly:
+    execute:
+      - writeToSplunk:
+          logLevel: on_logging
+          Type: request
+          version: 1.0.1
+      - activity-log:
+          title: activity-log
+          content: header
+          error-content: payload
+          version: 1.0.0
+      - gatewayscript:
+          title: MandatoryCheck
+          version: 1.0.0
+          source: "var verb = apim.getvariable('request.verb').toLowerCase();\nvar OpPath = apim.getvariable('api.operation.path').toString();\nvar Obj= apim.getvariable('api.document');\nvar Obj1=Obj.paths[OpPath][verb].parameters;\n\nfor(var call of Obj1){\n   \nif(call.required === true)\n{\n    switch(call.in.toString()){\n    \n    case \"header\":\n        \n    var tesmnow=\"request.headers.\"+[call.name.toLowerCase()];\n    if(!apim.getvariable(tesmnow)){\n               \n      console.info(\"Mandatory Field \"+call.name+\" Missing\");\n      apim.setvariable('message.status.code',400);\n      apim.setvariable('message.status.reason',(\"Mandatory Field \"+call.name+\" Missing\"));\n      apim.error('MyCustomError', 400, (\"Mandatory Field \"+call.name+\" Missing\"));\n                \n    }\n    break; \n                \n    case \"query\": case \"path\":\n        \n var par=\"request.parameters.\"+[call.name];\n\n    if(!apim.getvariable(par)){\n            \n      console.info(\"Mandatory Field \"+call.name+\" Missing\");\n      apim.setvariable('message.status.code',400);\n      apim.setvariable('message.status.reason',(\"Mandatory Fiel \"+call.name+\" Missing\"));\n      apim.error('MyCustomError', 400, (\"Mandatory Field \"+call.name+\" Missing\"));\n                \n    }\n    break;             \n    }   \n\n}\n    \n} \n\n\n"
+      - gatewayscript:
+          title: HeaderSet
+          version: 1.0.0
+          source: "var miscinfo = apim.getvariable('oauth.introspect.miscinfo');\nvar splitted = miscinfo.split(\"a:\", 2);\nvar value=splitted[1];\nvar val = JSON.parse(value);\nvar sessionId = val.sessionId;\nvar d = new Date().toISOString();\napim.setvariable('message.headers.sessionId', sessionId);\napim.setvariable('message.headers.Authorization', apim.getvariable('request.headers.authorization'));\n//Timestamp Change  \napim.setvariable('message.headers.timeStamp', new Date().toISOString());\n\n"
+      - invoke:
+          title: invoke
+          timeout: 60
+          verb: keep
+          cache-response: protocol
+          cache-ttl: 900
+          stop-on-error:
+            - null
+            - OperationError
+            - ConnectionError
+          version: 1.0.0
+          target-url: $(api.properties.url)$(request.path)$(request.search)
+          output: PrevInvokeResp
+      - gatewayscript:
+          title: ResponseBuild
+          version: 1.0.0
+          source: "session.output.write(apim.getvariable('PrevInvokeResp.body'));\n    apim.output('application/json');\n    \nif(apim.getvariable('message.status.code') == '201')\n{\n  apim.setvariable('message.status.reason', 'Created');  \n}\nelse{\napim.setvariable('message.status.reason', 'Ok');\n}"
+      - writeToSplunk:
+          logLevel: on_logging
+          Type: response
+          version: 1.0.1
+    catch:
+      - errors:
+          - MyCustomError
+        execute:
+          - commonInAssemblyCustomError:
+              version: 1.0.0
+          - writeToSplunk:
+              logLevel: on_logging
+              Type: error
+              version: 1.0.1
+      - errors:
+          - ConnectionError
+          - OperationError
+        execute:
+          - commonInAssemblyConnectionOperationError:
+              version: 1.0.0
+          - writeToSplunk:
+              logLevel: on_logging
+              Type: error
+              version: 1.0.1
+  gateway: datapower-gateway
+  enforced: true
+  testable: true
+  phase: realized
+  cors:
+    enabled: true
+  properties:
+    introspect-url:
+      value: ''
+      description: ''
+      encoded: false
+    oauth-url:
+      value: ''
+      description: ''
+      encoded: false
+    url:
+      value: ''
+      description: ''
+      encoded: false
+  catalogs:
+    Dev:
+      properties:
+        url: 'http://spvaplMICdv1.resources.boc.local:9481'
+        introspect-url: 'https://spvaplagwdv1.resources.boc.local/boc-digital-factory/dev/mobile/oauth2/introspect'
+        oauth-url: 'https://spvaplagwdv1.resources.boc.local/boc-digital-factory/dev/mobile/oauth2/token'
+    UAT:
+      properties:
+        url: 'http://lbaplMICut1.resources.boc.local:9481'
+        introspect-url: 'https://lbaplAGWut1.resources.boc.local/df-boc-org-uat/uat/mobile/oauth2/introspect'
+        oauth-url: 'https://lbaplAGWut1.resources.boc.local/df-boc-org-uat/uat/mobile/oauth2/token'
+securityDefinitions:
+  oauth-password:
+    type: oauth2
+    description: ''
+    flow: password
+    scopes:
+      MobileUser: ''
+    tokenUrl: $(oauth-url)
+    x-tokenIntrospect:
+      url: $(introspect-url)
+  Client_Secret:
+    type: apiKey
+    description: ''
+    in: query
+    name: client_secret
+  Client_Id:
+    type: apiKey
+    description: ''
+    in: query
+    name: client_id
+security:
+  - Client_Secret: []
+    Client_Id: []
+    oauth-password:
+      - MobileUser
